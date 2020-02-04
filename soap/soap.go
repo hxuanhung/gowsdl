@@ -75,14 +75,23 @@ func (s SOAPEnvelope11) Fault() *SOAPFault {
 	return s.Body.Fault
 }
 
+type SOAPHeader struct {
+	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Header"`
+
+	Headers []interface{} `xml:",omitempty"`
+}
+
 type SOAPEnvelope12 struct {
-	XMLName xml.Name      `xml:"http://www.w3.org/2003/05/soap-envelope Envelope"`
-	Headers []interface{} `xml:"http://www.w3.org/2003/05/soap-envelope Header"`
-	Body    SOAPBody12
+	XMLName xml.Name `xml:"http://www.w3.org/2003/05/soap-envelope s:Envelope"`
+	// https://github.com/hooklift/gowsdl/pull/149/files
+	Header *SOAPHeader
+	Body   SOAPBody12
 }
 
 func (s *SOAPEnvelope12) SetHeaders(headers []interface{}) {
-	s.Headers = headers
+	s.Header = &SOAPHeader{
+		Headers: headers,
+	}
 }
 
 func (s *SOAPEnvelope12) SetContent(content interface{}) {
@@ -448,6 +457,7 @@ func (s *Client) Call(soapAction string, request, response interface{}) error {
 			req.Header.Set(k, v)
 		}
 	}
+	fmt.Println(PrettyXML(envelope))
 	req.Close = true
 
 	client := s.opts.client
@@ -462,7 +472,6 @@ func (s *Client) Call(soapAction string, request, response interface{}) error {
 		}
 		client = &http.Client{Timeout: s.opts.contimeout, Transport: tr}
 	}
-
 	res, err := client.Do(req)
 	if err != nil {
 		return err
