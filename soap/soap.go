@@ -28,6 +28,14 @@ type SOAPEnvelope interface {
 	Fault() *SOAPFault
 }
 
+func PrettyXML(payload interface{}) string {
+	b, err := xml.MarshalIndent(payload, "", "  ")
+	if err != nil {
+		return "Failed to generate xml"
+	}
+	return string(b)
+}
+
 // newSOAPEnvelope produces new SOAPEnvelope struct according passed params
 func newSOAPEnvelope(c *Client, request bool) (SOAPEnvelope, error) {
 	// if user provided callbacks for custom constructors, use them
