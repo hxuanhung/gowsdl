@@ -745,7 +745,7 @@ type LivesAssured struct {
 }
 
 type Person struct {
-	DateOfBirth time.Time `xml:"DateOfBirth,omitempty"`
+	DateOfBirth string `xml:"DateOfBirth,omitempty"`
 
 	EmploymentStatus *EmploymentStatus `xml:"EmploymentStatus,omitempty"`
 
@@ -1122,7 +1122,7 @@ type RetrieveEnhancedProtectionComparisonQuoteReportRequestMessage struct {
 }
 
 type ComparisonQuoteReportRequest struct {
-	*ComparisonQuoteReportRequest
+	*ComparisonQuoteReportRequestBase
 
 	ReportType *EnhancedProtectionComparisonReportType `xml:"ReportType,omitempty"`
 }
@@ -1395,10 +1395,9 @@ type ProductUnavailableReason struct {
 
 	Description string `xml:"Description,omitempty"`
 }
-type QuoteResultHung struct{}
 
 type QuoteResult struct {
-	*QuoteResultHung
+	*QuoteResultBase
 
 	ExpiryDate string `xml:"ExpiryDate,omitempty"`
 
@@ -1443,7 +1442,7 @@ type ResultCommission struct {
 	Description string `xml:"Description,omitempty"`
 }
 
-type HungComparisonQuoteReportRequest struct {
+type ComparisonQuoteReportRequestBase struct {
 	ComparisonId *Guid `xml:"ComparisonId,omitempty"`
 
 	RemoveBranding bool `xml:"RemoveBranding,omitempty"`
@@ -1459,6 +1458,12 @@ type RetrieveComparisonQuoteReportResponseMessage struct {
 
 type ComparisonQuoteReport struct {
 	Report []byte `xml:"Report,omitempty"`
+}
+
+type ComparisonQuoteRequestBase struct {
+}
+
+type QuoteResultBase struct {
 }
 
 type Service struct {
