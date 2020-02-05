@@ -28,14 +28,6 @@ type SOAPEnvelope interface {
 	Fault() *SOAPFault
 }
 
-func PrettyXML(payload interface{}) string {
-	b, err := xml.MarshalIndent(payload, "", "  ")
-	if err != nil {
-		return "Failed to generate xml"
-	}
-	return string(b)
-}
-
 // newSOAPEnvelope produces new SOAPEnvelope struct according passed params
 func newSOAPEnvelope(c *Client, request bool) (SOAPEnvelope, error) {
 	// if user provided callbacks for custom constructors, use them
@@ -458,7 +450,6 @@ func (s *Client) Call(soapAction string, request, response interface{}) error {
 			req.Header.Set(k, v)
 		}
 	}
-	fmt.Println(PrettyXML(envelope))
 	req.Close = true
 
 	client := s.opts.client
@@ -473,6 +464,7 @@ func (s *Client) Call(soapAction string, request, response interface{}) error {
 		}
 		client = &http.Client{Timeout: s.opts.contimeout, Transport: tr}
 	}
+
 	res, err := client.Do(req)
 	if err != nil {
 		return err
