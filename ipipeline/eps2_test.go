@@ -90,18 +90,12 @@ func TestIntegration(t *testing.T) {
 
 	soapClient.AddHeader(auth)
 	type Action struct {
-		MustUnderstand string `xml:"mustUnderstand,attr"`
-		Data           string `xml:",chardata"`
-	}
-	type SOAPHeader struct {
 		XMLName        xml.Name `xml:"http://www.w3.org/2005/08/addressing Action"`
 		MustUnderstand string   `xml:"mustUnderstand,attr"`
 		Data           string   `xml:",chardata"`
-		// Action Action
 	}
-	soapClient.AddHeader(SOAPHeader{
+	soapClient.AddHeader(Action{
 		Data: "RetrieveComparisonQuoteResults", MustUnderstand: "1"})
-	// soapClient.SetHeader("Content-Type", "application/soap+xml")
 
 	client := NewIEnhancedProtectionComparisonService(soapClient)
 	res, err := client.RetrieveComparisonQuoteResults(&req)
