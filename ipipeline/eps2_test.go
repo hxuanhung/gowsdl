@@ -74,12 +74,9 @@ func TestIntegration(t *testing.T) {
 
 	req := RetrieveComparisonQuoteResults{
 		Request: &RetrieveComparisonQuoteResultsRequestMessage{
+			Space: "http://assureweb.co.uk/Schema/Shared/V2",
 			Message: &Message{
 				Header: &Header{
-					Space: "http://assureweb.co.uk/Schema/Shared/V2",
-					HungAttr: xml.Attr{
-						Value: "value",
-					},
 					Application: "Acre",
 				},
 			},
@@ -108,6 +105,6 @@ func TestIntegration(t *testing.T) {
 
 	client := NewIEnhancedProtectionComparisonService(soapClient)
 	res, err := client.RetrieveComparisonQuoteResults(&req)
-	t.Log(res)
+	t.Log(PrettyXML(res))
 	t.Log(err)
 }

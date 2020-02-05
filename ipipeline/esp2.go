@@ -1258,13 +1258,11 @@ const (
 )
 
 type Message struct {
-	Header *Header `xml:"Header,omitempty"`
+	Header *Header `xml:"w:Header,omitempty"`
 }
 
 type Header struct {
-	Space       string `xml:"xmlns,attr"`
-	HungAttr    xml.Attr
-	Application string `xml:"Application,omitempty"`
+	Application string `xml:"w:Application,omitempty"`
 }
 
 type ComparisonQuoteRequestWithProviders struct {
@@ -1352,11 +1350,12 @@ type SubmitComparisonQuoteResponse struct {
 type RetrieveComparisonQuoteResultsRequestMessage struct {
 	*Message
 
-	ComparisonQuoteResultsRequest *ComparisonQuoteResultsRequest `xml:"ComparisonQuoteResultsRequest,omitempty"`
+	Space                         string                         `xml:"xmlns:w,attr"`
+	ComparisonQuoteResultsRequest *ComparisonQuoteResultsRequest `xml:"w:ComparisonQuoteResultsRequest,omitempty"`
 }
 
 type ComparisonQuoteResultsRequest struct {
-	ComparisonId *Guid `xml:"ComparisonId,omitempty"`
+	ComparisonId *Guid `xml:"w:ComparisonId,omitempty"`
 }
 
 type ComparisonQuoteResult struct {
@@ -1396,11 +1395,12 @@ type ProductUnavailableReason struct {
 
 	Description string `xml:"Description,omitempty"`
 }
+type QuoteResultHung struct{}
 
 type QuoteResult struct {
-	*QuoteResult
+	*QuoteResultHung
 
-	ExpiryDate time.Time `xml:"ExpiryDate,omitempty"`
+	ExpiryDate string `xml:"ExpiryDate,omitempty"`
 
 	IllustrationBasis *IllustrationBasis `xml:"IllustrationBasis,omitempty"`
 
