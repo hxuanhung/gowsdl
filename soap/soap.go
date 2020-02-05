@@ -6,6 +6,7 @@ import (
 	"crypto/tls"
 	"encoding/xml"
 	"errors"
+	"io/ioutil"
 	"net"
 	"net/http"
 	"time"
@@ -400,13 +401,7 @@ func (s *Client) AddHeader(header interface{}) {
 	s.headers = append(s.headers, header)
 }
 
-// CallContext performs HTTP POST request with a context
-func (s *Client) CallContext(ctx context.Context, soapAction string, request, response interface{}) error {
-	return s.call(ctx, soapAction, request, response)
-}
-
 // Call performs HTTP POST request
-
 func (s *Client) Call(soapAction string, request, response interface{}) error {
 	envelope, err := newSOAPEnvelope(s, true /* request */)
 	if err != nil {
@@ -471,19 +466,12 @@ func (s *Client) Call(soapAction string, request, response interface{}) error {
 	}
 	defer res.Body.Close()
 
-	respEnvelope := new(SOAPEnvelope)
-	respEnvelope.Body = SOAPBody{Content: response}
-
-	mtomBoundary, err := getMtomHeader(res.Header.Get("Content-Type"))
+	rawbody, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return err
 	}
-
-	var dec SOAPDecoder
-	if mtomBoundary != "" {
-		dec = newMtomDecoder(res.Body, mtomBoundary)
-	} else {
-		dec = xml.NewDecoder(res.Body)
+	if len(rawbody) == 0 {
+		return nil
 	}
 
 	respEnvelope, err := newSOAPEnvelope(s, false /* request */)
